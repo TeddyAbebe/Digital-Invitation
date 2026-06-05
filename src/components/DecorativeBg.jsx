@@ -13,7 +13,7 @@ export default function DecorativeBg() {
         aria-hidden
         style={{
           background:
-            'radial-gradient(circle at top left, rgba(201,162,39,0.35), transparent 70%)',
+            "radial-gradient(circle at top left, rgba(179,139,26,0.35), transparent 70%)",
         }}
       />
       <div
@@ -21,9 +21,9 @@ export default function DecorativeBg() {
         aria-hidden
         style={{
           background:
-            'radial-gradient(circle at bottom right, rgba(201,162,39,0.3), transparent 70%)',
+            "radial-gradient(circle at bottom right, rgba(179,139,26,0.3), transparent 70%)",
         }}
       />
     </>
-  )
+  );
 }

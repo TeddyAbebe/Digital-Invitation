@@ -1,14 +1,17 @@
-import Confetti from './components/Confetti'
-import DecorativeBg from './components/DecorativeBg'
-import FloatingOrbs from './components/FloatingOrbs'
-import FloatingNav from './components/FloatingNav'
-import Hero from './components/Hero'
-import EventDetails from './components/EventDetails'
-import LocationMap from './components/LocationMap'
-import WishForm from './components/WishForm'
-import SectionDivider from './components/SectionDivider'
-import Reveal from './components/Reveal'
-import { invitation } from './config'
+import Confetti from "./components/Confetti";
+import DecorativeBg from "./components/DecorativeBg";
+import FloatingOrbs from "./components/FloatingOrbs";
+import FloatingNav from "./components/FloatingNav";
+import FloatingCaps from "./components/FloatingCaps";
+import PhotoGallery from "./components/PhotoGallery";
+import SparkleTrail from "./components/SparkleTrail";
+import Hero from "./components/Hero";
+import EventDetails from "./components/EventDetails";
+import LocationMap from "./components/LocationMap";
+import WishForm from "./components/WishForm";
+import SectionDivider from "./components/SectionDivider";
+import Reveal from "./components/Reveal";
+import { invitation } from "./config";
 
 function App() {
   return (
@@ -18,10 +21,10 @@ function App() {
         aria-hidden
         style={{
           background: `
-            radial-gradient(ellipse 80% 50% at 50% -10%, rgba(201, 162, 39, 0.2), transparent),
-            radial-gradient(ellipse 60% 40% at 100% 50%, rgba(107, 140, 206, 0.06), transparent),
-            radial-gradient(ellipse 50% 30% at 0% 80%, rgba(201, 162, 39, 0.08), transparent),
-            linear-gradient(180deg, #0a0f1a 0%, #121a2e 45%, #0a0f1a 100%)
+            radial-gradient(ellipse 80% 50% at 50% -10%, rgba(179, 139, 26, 0.1), transparent),
+            radial-gradient(ellipse 60% 40% at 100% 50%, rgba(107, 140, 206, 0.04), transparent),
+            radial-gradient(ellipse 50% 30% at 0% 80%, rgba(179, 139, 26, 0.06), transparent),
+            linear-gradient(180deg, #ffffff 0%, #f8f9fa 45%, #ffffff 100%)
           `,
         }}
       />
@@ -29,10 +32,14 @@ function App() {
       <DecorativeBg />
       <FloatingOrbs />
       <Confetti />
+      <FloatingCaps />
+      <SparkleTrail />
       <FloatingNav />
 
       <main className="relative">
         <Hero />
+        <SectionDivider />
+        <PhotoGallery />
         <SectionDivider />
         <EventDetails />
         <SectionDivider />
@@ -46,13 +53,13 @@ function App() {
           <p className="gold-shimmer font-[family-name:var(--font-display)] text-lg">
             {invitation.graduateName}
           </p>
-          <p className="mt-2 font-[family-name:var(--font-sans)] text-xs tracking-[0.25em] text-[#f7f0e3]/40 uppercase">
+          <p className="mt-2 font-[family-name:var(--font-sans)] text-xs tracking-[0.25em] text-[#1a1a1a]/40 uppercase">
             {invitation.classYear} · With love & gratitude
           </p>
         </Reveal>
       </footer>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
