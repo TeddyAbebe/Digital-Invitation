@@ -712,6 +712,19 @@ body {
   animation: ribbon-drag 1.8s ease-in-out infinite;
 }
 
+@keyframes ribbon-drag-left {
+  0%   { transform: translateX(0px)  rotate(0deg);  opacity: 0.9; }
+  20%  { transform: translateX(-6px) rotate(4deg);  opacity: 1;   }
+  45%  { transform: translateX(-10px) rotate(6deg); opacity: 1;   }
+  65%  { transform: translateX(-3px) rotate(2deg);  opacity: 0.95;}
+  80%  { transform: translateX(-1px) rotate(1deg);  opacity: 0.9; }
+  100% { transform: translateX(0px)  rotate(0deg);  opacity: 0.9; }
+}
+.animate-hand-tap-left {
+  display: inline-block;
+  animation: ribbon-drag-left 1.8s ease-in-out infinite;
+}
+
 @keyframes btn-shimmer {
   0%   { transform: translateX(-100%); }
   100% { transform: translateX(200%); }
@@ -753,4 +766,276 @@ body {
 
 .animate-music-note-float-down {
   animation: music-note-float-down ease-out forwards;
+}
+
+/* ── Event Details enhancements ── */
+.details-section {
+  background: radial-gradient(
+      ellipse 70% 50% at 50% 0%,
+      rgba(179, 139, 26, 0.07),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 40% 30% at 100% 80%,
+      rgba(212, 175, 55, 0.05),
+      transparent
+    );
+}
+
+.details-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.55;
+  animation: orb-float 14s ease-in-out infinite;
+}
+
+.details-orb-a {
+  top: 10%;
+  left: -5%;
+  width: 220px;
+  height: 220px;
+  background: rgba(179, 139, 26, 0.12);
+}
+
+.details-orb-b {
+  right: -8%;
+  bottom: 15%;
+  width: 280px;
+  height: 280px;
+  background: rgba(212, 175, 55, 0.1);
+  animation-delay: -6s;
+}
+
+.details-grid-pattern {
+  background-image: radial-gradient(rgba(179, 139, 26, 0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: linear-gradient(180deg, black 0%, transparent 85%);
+  opacity: 0.35;
+}
+
+.detail-card {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(252, 250, 245, 0.88) 100%
+  );
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(179, 139, 26, 0.2);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transition:
+    transform 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.detail-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 60%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+  pointer-events: none;
+}
+
+.detail-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(179, 139, 26, 0.38);
+  box-shadow:
+    0 16px 48px rgba(179, 139, 26, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.detail-card:hover::after {
+  transform: translateX(120%);
+}
+
+.detail-card-watermark {
+  position: absolute;
+  right: 0.75rem;
+  bottom: -0.25rem;
+  font-size: 4.5rem;
+  font-weight: 600;
+  line-height: 1;
+  color: rgba(179, 139, 26, 0.06);
+  pointer-events: none;
+  user-select: none;
+  transition: color 0.4s ease;
+}
+
+.detail-card:hover .detail-card-watermark {
+  color: rgba(179, 139, 26, 0.1);
+}
+
+.schedule-panel {
+  border-color: rgba(179, 139, 26, 0.22);
+}
+
+.details-inner-card {
+  box-shadow: 0 2px 12px rgba(179, 139, 26, 0.06);
+}
+
+.schedule-title-line {
+  width: 5rem;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #b38b1a, #e5c158, #b38b1a, transparent);
+  border-radius: 2px;
+}
+
+.detail-label-badge {
+  display: inline-block;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(179, 139, 26, 0.35);
+  background: linear-gradient(135deg, rgba(179, 139, 26, 0.18), rgba(212, 175, 55, 0.12));
+  padding: 0.35rem 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #7a5c10;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.schedule-path-wrap {
+  min-height: 22rem;
+  padding: 0.25rem 0 0.75rem;
+}
+
+.schedule-path-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.schedule-path-glow {
+  fill: none;
+  stroke: rgba(179, 139, 26, 0.12);
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+
+.schedule-path-line {
+  fill: none;
+  stroke: url(#scheduleGold);
+  stroke-width: 2.5;
+  stroke-dasharray: 7 5;
+  stroke-linecap: round;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 2.2s ease-out;
+}
+
+.schedule-path-wrap.is-visible .schedule-path-line {
+  stroke-dashoffset: 0;
+}
+
+.schedule-path-node-dot {
+  fill: #b38b1a;
+  opacity: 0;
+  transform-origin: center;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.schedule-path-wrap.is-visible .schedule-path-node-dot {
+  opacity: 0.55;
+}
+
+.schedule-path-list {
+  z-index: 1;
+}
+
+.schedule-path-step .schedule-footprint::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 1rem;
+  border: 1px solid rgba(179, 139, 26, 0.3);
+  animation: pulse-ring 2.8s ease-out infinite;
+}
+
+.timeline-step.is-visible .schedule-footprint {
+  box-shadow: 0 0 24px rgba(179, 139, 26, 0.22);
+}
+
+.schedule-time-pill {
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #b38b1a 0%, #9a7516 100%);
+  padding: 0.3rem 0.65rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+  box-shadow:
+    0 2px 10px rgba(179, 139, 26, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+@media (min-width: 640px) {
+  .schedule-time-pill {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .schedule-path-wrap {
+    min-height: 26rem;
+  }
+
+  .schedule-path-card {
+    max-width: 100% !important;
+  }
+}
+
+.address-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 245, 238, 0.95) 100%
+  );
+  border: 1px solid rgba(179, 139, 26, 0.22);
+  box-shadow:
+    0 8px 32px rgba(179, 139, 26, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.address-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #c9a227, transparent);
+}
+
+.address-card-shine {
+  background: linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.address-card:hover .address-card-shine {
+  opacity: 1;
+}
+
+.address-pin {
+  animation: float 4s ease-in-out infinite;
 }

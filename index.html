@@ -12,9 +12,19 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap"
       rel="stylesheet"
     />
+    <link rel="preload" href="/audio/graduation-classical.mp3" as="fetch" crossorigin />
   </head>
   <body>
+    <audio
+      id="graduation-music"
+      src="/audio/graduation-classical.mp3"
+      preload="auto"
+      autoplay
+      loop
+      playsinline
+    ></audio>
     <div id="root"></div>
+    <script src="/music-bootstrap.js"></script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

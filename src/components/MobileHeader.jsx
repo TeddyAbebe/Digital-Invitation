@@ -1,4 +1,4 @@
-import AudioPlayer from "./AudioPlayer";
+import { AudioControls, useIsMobile } from "./AudioPlayer";
 import FloatingNav from "./FloatingNav";
 
 const RADIUS = "1rem"; /* matches rounded-2xl */
@@ -18,10 +18,13 @@ function progressEndRadius(progress) {
 }
 
 export default function MobileHeader({ scrollProgress = 0 }) {
+  const isMobile = useIsMobile();
   const endRadius = progressEndRadius(scrollProgress);
 
+  if (!isMobile) return null;
+
   return (
-    <header className="fixed top-0 right-0 left-0 z-[60] overflow-visible px-3 md:hidden">
+    <header className="fixed top-0 right-0 left-0 z-[60] overflow-visible px-3">
       {/* 4px gutter track — rounded on all corners */}
       <div
         className={`relative overflow-visible rounded-2xl ${TRACK} p-1 shadow-[0_4px_20px_rgba(0,0,0,0.05)]`}
@@ -43,7 +46,7 @@ export default function MobileHeader({ scrollProgress = 0 }) {
           style={{ borderRadius: INNER_RADIUS }}
         >
           <div className="flex items-center gap-2 overflow-visible px-2.5 py-1.5">
-            <AudioPlayer embedded />
+            <AudioControls embedded />
             <FloatingNav embedded />
           </div>
         </div>

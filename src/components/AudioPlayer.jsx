@@ -1,13 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-
-/*
-  Gentle classical background — Bach "Air on the G String"
-  (US Air Force Strings, public domain). Matches the soft
-  light-academia orchestral feel of graduation classical playlists.
-*/
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 const MUSIC_SRC = "/audio/graduation-classical.mp3";
 const VOLUME = 0.35;
+
+const MusicContext = createContext(null);
 
 function MusicNoteIcon({ variant, className }) {
   if (variant === 0) {
@@ -125,7 +121,7 @@ function MuteButton({ muted, onClick, size = "desktop" }) {
   );
 }
 
-function useIsMobile(breakpoint = 768) {
+export function useIsMobile(breakpoint = 768) {
   const [isMobile, setIsMobile] = useState(
     () => typeof window !== "undefined" && window.innerWidth < breakpoint
   );
@@ -141,73 +137,100 @@ function useIsMobile(breakpoint = 768) {
   return isMobile;
 }
 
-export default function AudioPlayer({ embedded = false }) {
-  const audioRef = useRef(null);
-  const startedRef = useRef(false);
+export function useMusic() {
+  const ctx = useContext(MusicContext);
+  if (!ctx) throw new Error("useMusic must be used within MusicProvider");
+  return ctx;
+}
+
+function getAudio() {
+  return document.getElementById("graduation-music");
+}
+
+function syncFromAudio(audio, setPlaying, setMuted) {
+  if (!audio) return;
+  setPlaying(!audio.paused || audio.dataset.playing === "1");
+  setMuted(audio.muted);
+}
+
+export function MusicProvider({ children }) {
   const [muted, setMuted] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const isMobile = useIsMobile();
-
-  const startMusic = () => {
-    if (startedRef.current) return;
-
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    audio.volume = VOLUME;
-    audio.loop = true;
-
-    audio
-      .play()
-      .then(() => {
-        startedRef.current = true;
-        setPlaying(true);
-      })
-      .catch(() => {});
-  };
 
   useEffect(() => {
-    const handleScroll = () => startMusic();
-    window.addEventListener("scroll", handleScroll, { passive: true, once: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const audio = getAudio();
+    if (!audio) return;
+
+    const sync = () => syncFromAudio(audio, setPlaying, setMuted);
+    const tryStart = () => window.__graduationMusic?.tryPlay?.();
+
+    sync();
+    audio.addEventListener("play", sync);
+    audio.addEventListener("playing", sync);
+    audio.addEventListener("pause", sync);
+    audio.addEventListener("volumechange", sync);
+    window.addEventListener("graduation-music:state", sync);
+    window.addEventListener("scroll", tryStart, { passive: true });
+
+    tryStart();
+
+    return () => {
+      audio.removeEventListener("play", sync);
+      audio.removeEventListener("playing", sync);
+      audio.removeEventListener("pause", sync);
+      audio.removeEventListener("volumechange", sync);
+      window.removeEventListener("graduation-music:state", sync);
+      window.removeEventListener("scroll", tryStart);
+    };
   }, []);
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.muted = muted;
-  }, [muted]);
-
   const toggleMute = (e) => {
-    e.stopPropagation();
-    if (!playing) startMusic();
-    setMuted((m) => !m);
+    e?.stopPropagation?.();
+    const audio = getAudio();
+    if (!audio) return;
+
+    if (audio.paused) {
+      audio.muted = false;
+      audio.volume = VOLUME;
+      audio.play().catch(() => {});
+      return;
+    }
+
+    audio.muted = !audio.muted;
+    setMuted(audio.muted);
   };
 
-  const showNotes = playing && !muted;
+  return (
+    <MusicContext.Provider value={{ muted, playing, toggleMute }}>
+      {children}
+    </MusicContext.Provider>
+  );
+}
+
+export function AudioControls({ embedded = false }) {
+  const { muted, playing, toggleMute } = useMusic();
+  const isMobile = useIsMobile();
+  const showNotes = playing;
 
   if (embedded) {
     return (
-      <>
-        <audio ref={audioRef} src={MUSIC_SRC} preload="auto" />
-        <div className="relative z-10 shrink-0 overflow-visible">
-          <FloatingMusicNotes active={showNotes} floatDown />
-          <MuteButton muted={muted} onClick={toggleMute} size="header" />
-        </div>
-      </>
+      <div className="relative z-10 shrink-0 overflow-visible">
+        <FloatingMusicNotes active={showNotes} floatDown />
+        <MuteButton muted={muted} onClick={toggleMute} size="header" />
+      </div>
     );
   }
 
   if (isMobile) return null;
 
   return (
-    <>
-      <audio ref={audioRef} src={MUSIC_SRC} preload="auto" />
-
-      <div className="fixed bottom-6 left-5 z-[60] h-11 w-11">
-        <FloatingMusicNotes active={showNotes} />
-        <MuteButton muted={muted} onClick={toggleMute} size="desktop" />
-      </div>
-    </>
+    <div className="fixed bottom-6 left-5 z-[60] h-11 w-11">
+      <FloatingMusicNotes active={showNotes} />
+      <MuteButton muted={muted} onClick={toggleMute} size="desktop" />
+    </div>
   );
+}
+
+export default function AudioPlayer() {
+  return <AudioControls />;
 }

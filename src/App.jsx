@@ -90,7 +90,7 @@ function App() {
           <p className="mt-2 font-[family-name:var(--font-sans)] text-xs tracking-[0.25em] text-[#1a1a1a]/40 uppercase">
             {invitation.classYear} · With love & gratitude
           </p>
-          <p className="mt-2 font-[family-name:var(--font-sans)] text-xs text-[#1a1a1a]/55">
+          {/* <p className="mt-2 font-[family-name:var(--font-sans)] text-xs text-[#1a1a1a]/55">
             Made with ❤️ by{" "}
             <a
               href="https://tewodros.netlify.app/"
@@ -100,7 +100,7 @@ function App() {
             >
               Teddy
             </a>
-          </p>
+          </p> */}
         </Reveal>
       </footer>
     </div>

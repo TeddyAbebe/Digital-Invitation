@@ -129,6 +129,14 @@ export default function PhotoGallery() {
   const goNext = () => setPage((p) => Math.min(p + 1, MAX_PAGE));
   const goPrev = () => setPage((p) => Math.max(p - 1, 0));
 
+  const openAlbum = (e) => {
+    e?.stopPropagation?.();
+    e?.preventDefault?.();
+    if (page === 0) goNext();
+  };
+
+  const stopBookDrag = (e) => e.stopPropagation();
+
   /* Reset enlarged state once book opens */
   useEffect(() => {
     if (page > 0) setIsEnlarged(false);
@@ -230,6 +238,7 @@ export default function PhotoGallery() {
   const tc      = isDragging ? "transition-none" : "transition-transform duration-1000 ease-in-out";
   const cursor  = isDragging ? "cursor-grabbing" : "cursor-grab";
   const fanOpacity    = (page === 0 || page === MAX_PAGE) ? 0 : 0.3;
+  const coverClosed   = page === 0;
   const currentSpread = (page >= 1 && page < MAX_PAGE) ? spreads[page - 1] : null;
 
   return (
@@ -246,7 +255,7 @@ export default function PhotoGallery() {
 
         {/* Interactive arrows + 3-D book container */}
         <Reveal variant="scale" delay={250} duration={850}>
-          <div className="relative mt-8 sm:mt-12 flex justify-center items-center w-full max-w-[1050px] mx-auto px-2 sm:px-16">
+          <div className="relative mt-8 sm:mt-12 flex justify-center items-center w-full max-w-[1050px] mx-auto overflow-visible px-4 pr-12 sm:px-16 sm:pr-16">
           
           {/* Floating Left Arrow */}
           {page > 0 && (
@@ -262,7 +271,7 @@ export default function PhotoGallery() {
           {/* 3-D book */}
           <div className="perspective-2000 w-full flex justify-center">
             <div
-              className={`relative h-[210px] xs:h-[260px] sm:h-[500px] w-full max-w-[900px] preserve-3d ${cursor} ${tc}`}
+              className={`relative overflow-visible h-[210px] xs:h-[260px] sm:h-[500px] w-full max-w-[900px] preserve-3d ${cursor} ${tc}`}
               style={{ transform: `rotateX(20deg) translateX(${txVal}%) scale(${isEnlarged ? 1.14 : 1})` }}
               onMouseDown={(e)  => startDrag(e.clientX)}
               onMouseMove={(e)  => moveDrag(e.clientX)}
@@ -319,7 +328,7 @@ export default function PhotoGallery() {
                 return (
                   <div
                     key={k}
-                    className={`absolute top-0 left-1/2 h-full w-[49.5%] origin-left preserve-3d ${tc}`}
+                    className={`absolute top-0 left-1/2 h-full w-[49.5%] origin-left preserve-3d ${tc} ${coverClosed ? "pointer-events-none" : ""}`}
                     style={{ transform: `rotateY(${getFlipAngle(k)}deg)`, zIndex: getFlipZ(k) }}
                   >
                     {/* Front face: right page of spread k */}
@@ -403,7 +412,7 @@ export default function PhotoGallery() {
                 style={{ transform: `rotateY(${coverAngle}deg)`, zIndex: page === 0 ? 100 : 2 }}
               >
                 {/* Cover face */}
-                <div className="backface-hidden absolute inset-0 rounded-r-sm bg-gradient-to-br from-[#1e293b] to-[#0f172a] border-2 border-[#b38b1a] p-4 sm:p-8 flex flex-col items-center justify-between text-center shadow-[inset_0_0_30px_rgba(0,0,0,0.8),0_15px_35px_rgba(0,0,0,0.5)]">
+                <div className="backface-hidden overflow-visible absolute inset-0 rounded-r-sm bg-gradient-to-br from-[#1e293b] to-[#0f172a] border-2 border-[#b38b1a] p-4 sm:p-8 flex flex-col items-center justify-between text-center shadow-[inset_0_0_30px_rgba(0,0,0,0.8),0_15px_35px_rgba(0,0,0,0.5)]">
                   <div className="absolute inset-1.5 sm:inset-3 border border-[#b38b1a]/40 rounded-sm pointer-events-none" />
                   <div className="absolute inset-2 sm:inset-4 border border-[#b38b1a]/20 rounded-sm pointer-events-none" />
                   <div className="absolute top-3 left-3 text-[#b38b1a]/40 text-xs sm:text-sm">✦</div>
@@ -411,7 +420,7 @@ export default function PhotoGallery() {
                   <div className="absolute bottom-3 left-3 text-[#b38b1a]/40 text-xs sm:text-sm">✦</div>
                   <div className="absolute bottom-3 right-3 text-[#b38b1a]/40 text-xs sm:text-sm">✦</div>
 
-                  <div className="text-[#b38b1a] text-[9px] sm:text-[11px] tracking-[0.25em] font-serif opacity-80 mt-4 uppercase">
+                  <div className="relative z-10 mt-3 text-[11px] font-semibold uppercase tracking-[0.3em] text-[#e8c84a] sm:mt-4 sm:text-sm [text-shadow:0_1px_6px_rgba(0,0,0,0.6)]">
                     Class of 2026
                   </div>
 
@@ -423,56 +432,48 @@ export default function PhotoGallery() {
                       <h2 className="font-[family-name:var(--font-display)] text-lg sm:text-3xl text-[#d4af37] tracking-wider leading-tight">
                         Kalkidan Temesgen
                       </h2>
-                      <p className="font-[family-name:var(--font-body)] text-[9px] sm:text-xs text-[#b38b1a]/90 tracking-[0.3em] uppercase">
+                      <p className="font-[family-name:var(--font-body)] text-[10px] font-semibold uppercase tracking-[0.35em] text-[#e8c84a] sm:text-sm [text-shadow:0_1px_6px_rgba(0,0,0,0.6)]">
                         Graduation Album
                       </p>
                     </div>
                   </div>
 
 
-                  {/* Vertical Satin Ribbon */}
-                  <div className="absolute right-[12%] top-0 h-full w-4 sm:w-6 bg-gradient-to-b from-[#b38b1a] via-[#e5c158] to-[#b38b1a] shadow-[0_0_8px_rgba(0,0,0,0.4)] pointer-events-none z-10 opacity-90">
-                    <div className="absolute inset-y-0 left-1/2 w-0.5 bg-white/30 -translate-x-1/2" />
-                  </div>
+                  {/* Ribbon + bow — straddle the cover edge, click to open */}
+                  {coverClosed && (
+                    <button
+                      type="button"
+                      onClick={openAlbum}
+                      onPointerDown={stopBookDrag}
+                      onMouseDown={stopBookDrag}
+                      onTouchStart={stopBookDrag}
+                      aria-label="Open graduation album"
+                      className="group/ribbon absolute top-0 right-0 z-[250] h-full w-12 translate-x-1/2 cursor-pointer border-0 bg-transparent p-0 sm:w-16"
+                    >
+                      {/* Vertical stripe — half on cover, half outside */}
+                      <span className="absolute inset-y-0 left-1/2 w-4 -translate-x-1/2 bg-gradient-to-b from-[#b38b1a] via-[#e5c158] to-[#b38b1a] opacity-90 shadow-[0_0_8px_rgba(0,0,0,0.4)] transition duration-300 group-hover/ribbon:opacity-100 group-hover/ribbon:shadow-[0_0_14px_rgba(212,175,55,0.45)] sm:w-6" />
+                      <span className="absolute inset-y-0 left-1/2 w-0.5 -translate-x-1/2 bg-white/30" />
 
-                  {/* Ribbon Bow Pull-Tag */}
-                  <div 
-                    className="absolute right-[-14px] sm:right-[-22px] top-1/2 -translate-y-1/2 z-20 cursor-pointer flex items-center group select-none"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsEnlarged((prev) => !prev);
-                    }}
-                  >
-                    {/* Animated hand next to bow — points right toward ribbon */}
-                    <div className={`mr-1 text-xl sm:text-2xl select-none transition-all duration-300 ${
-                      isEnlarged ? 'animate-swipe-left' : 'animate-hand-tap'
-                    }`}>
-                      {isEnlarged ? '👈' : '👉'}
-                    </div>
-                    
-                    {/* 3D Bow Knot — scales up when enlarged */}
-                    <div className={`relative flex items-center justify-center transition-all duration-500 ${
-                      isEnlarged
-                        ? 'w-16 h-16 sm:w-20 sm:h-20 drop-shadow-[0_0_12px_rgba(212,175,55,0.8)]'
-                        : 'w-10 h-10 sm:w-14 sm:h-14 group-hover:scale-110 ribbon-sway'
-                    }`}>
-                      {/* Left Loop */}
-                      <div className={`absolute right-[44%] top-[15%] bg-[#d4af37] rounded-full border border-[#b38b1a] shadow-md -rotate-12 origin-bottom-right transition-all duration-500 ${
-                        isEnlarged ? 'w-8 h-8 sm:w-10 sm:h-10' : 'w-6 h-6 sm:w-8 sm:h-8'
-                      }`} />
-                      {/* Right Loop */}
-                      <div className={`absolute left-[44%] top-[15%] bg-[#d4af37] rounded-full border border-[#b38b1a] shadow-md rotate-12 origin-bottom-left transition-all duration-500 ${
-                        isEnlarged ? 'w-8 h-8 sm:w-10 sm:h-10' : 'w-6 h-6 sm:w-8 sm:h-8'
-                      }`} />
-                      {/* Tails */}
-                      <div className="absolute right-[48%] top-[45%] w-2.5 h-6 sm:w-3.5 sm:h-8 bg-[#b38b1a] border border-[#9a7b18] -rotate-30 origin-top-right rounded-b-xs" />
-                      <div className="absolute left-[48%] top-[45%] w-2.5 h-6 sm:w-3.5 sm:h-8 bg-[#b38b1a] border border-[#9a7b18] rotate-30 origin-top-left rounded-b-xs" />
-                      {/* Knot Center */}
-                      <div className={`absolute bg-gradient-to-br from-white via-[#d4af37] to-[#b38b1a] rounded-full border-2 border-[#b38b1a] shadow-md z-10 transition-all duration-500 ${
-                        isEnlarged ? 'w-6 h-6 sm:w-8 sm:h-8 animate-pulse' : 'w-4 h-4 sm:w-6 sm:h-6'
-                      }`} />
-                    </div>
-                  </div>
+                      {/* Bow centered on the edge */}
+                      <div className="absolute left-1/2 top-1/2 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center transition-all duration-500 group-hover/ribbon:scale-110 ribbon-sway sm:h-14 sm:w-14">
+                        <div className="absolute right-[44%] top-[15%] h-6 w-6 origin-bottom-right -rotate-12 rounded-full border border-[#b38b1a] bg-[#d4af37] shadow-md sm:h-8 sm:w-8" />
+                        <div className="absolute left-[44%] top-[15%] h-6 w-6 origin-bottom-left rotate-12 rounded-full border border-[#b38b1a] bg-[#d4af37] shadow-md sm:h-8 sm:w-8" />
+                        <div className="absolute right-[48%] top-[45%] h-6 w-2.5 origin-top-right -rotate-30 rounded-b-xs border border-[#9a7b18] bg-[#b38b1a] sm:h-8 sm:w-3.5" />
+                        <div className="absolute left-[48%] top-[45%] h-6 w-2.5 origin-top-left rotate-30 rounded-b-xs border border-[#9a7b18] bg-[#b38b1a] sm:h-8 sm:w-3.5" />
+                        <div className="absolute z-10 h-4 w-4 rounded-full border-2 border-[#b38b1a] bg-gradient-to-br from-white via-[#d4af37] to-[#b38b1a] shadow-md sm:h-6 sm:w-6" />
+                      </div>
+                    </button>
+                  )}
+
+                  {/* Hand outside album — right of bow, points left */}
+                  {coverClosed && (
+                    <span
+                      className="pointer-events-none absolute right-0 top-1/2 z-[260] translate-x-[calc(50%+2.75rem)] -translate-y-1/2 select-none text-2xl animate-hand-tap-left sm:translate-x-[calc(50%+3.5rem)] sm:text-4xl"
+                      aria-hidden
+                    >
+                      👈
+                    </span>
+                  )}
                 </div>
 
                 {/* Inside front cover lining */}
@@ -495,7 +496,7 @@ export default function PhotoGallery() {
               {[1, 2, 3].map((i) => (
                 <div
                   key={`fl-${i}`}
-                  className={`vintage-paper absolute top-0 right-1/2 h-full w-[49.5%] origin-right ${tc}`}
+                  className={`vintage-paper absolute top-0 right-1/2 h-full w-[49.5%] origin-right ${tc} ${coverClosed ? "pointer-events-none" : ""}`}
                   style={{
                     transform: `rotateY(${page === 0 ? 180 : (page === MAX_PAGE ? 0 : -15 - i * 3)}deg) translateZ(${-i * 10}px)`,
                     zIndex: 1,
@@ -506,7 +507,7 @@ export default function PhotoGallery() {
               {[1, 2, 3].map((i) => (
                 <div
                   key={`fr-${i}`}
-                  className={`vintage-paper absolute top-0 left-1/2 h-full w-[49.5%] origin-left ${tc}`}
+                  className={`vintage-paper absolute top-0 left-1/2 h-full w-[49.5%] origin-left ${tc} ${coverClosed ? "pointer-events-none" : ""}`}
                   style={{
                     transform: `rotateY(${page === 0 ? 0 : (page === MAX_PAGE ? -180 : 15 + i * 3)}deg) translateZ(${-i * 10}px)`,
                     zIndex: 1,
