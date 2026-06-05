@@ -81,9 +81,9 @@ function EndPageLeft() {
 
 function EndPageRight() {
   return (
-    <div className="absolute inset-[10px] sm:inset-[24px] flex flex-col items-center justify-center text-center gap-4 sm:gap-6 p-4 sm:p-6 overflow-hidden">
-      <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full border-2 border-[#b38b1a]/30 flex items-center justify-center bg-[#fdfbf7] shadow-sm mb-2">
-        <GraduationCap className="w-8 h-8 sm:w-12 sm:h-12 text-[#b38b1a] animate-float" />
+    <div className="absolute inset-[10px] sm:inset-[24px] flex flex-col items-center justify-center text-center gap-3 sm:gap-6 p-3 sm:p-6 overflow-hidden">
+      <div className="w-12 h-12 sm:w-24 sm:h-24 shrink-0 aspect-square rounded-full border-2 border-[#b38b1a]/30 flex items-center justify-center bg-[#fdfbf7] shadow-sm mb-2">
+        <GraduationCap className="w-6 h-6 sm:w-12 sm:h-12 text-[#b38b1a] animate-float" />
       </div>
       <div className="space-y-2 sm:space-y-3">
         <h3 className="font-[family-name:var(--font-display)] text-2xl sm:text-4xl text-[#1a1a1a] tracking-widest font-extrabold uppercase">
@@ -240,27 +240,27 @@ export default function PhotoGallery() {
       <div className="mx-auto max-w-7xl select-none">
         <SectionHeader
           icon={Camera}
-          title="Interactive Album"
+          title="Graduation Album"
         />
 
         {/* Interactive arrows + 3-D book container */}
-        <div className="relative mt-8 sm:mt-12 flex justify-center items-center w-full max-w-[1050px] mx-auto px-10 sm:px-16">
+        <div className="relative mt-8 sm:mt-12 flex justify-center items-center w-full max-w-[1050px] mx-auto px-2 sm:px-16">
           
           {/* Floating Left Arrow */}
           {page > 0 && (
             <button
               onClick={(e) => { e.stopPropagation(); goPrev(); }}
-              className="absolute left-0 sm:left-2 z-40 w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-[#b38b1a]/40 bg-[#fdfbf7]/90 hover:bg-[#b38b1a] hover:text-white text-[#b38b1a] flex items-center justify-center transition-all duration-300 shadow-md cursor-pointer hover:scale-105 active:scale-95"
+              className="absolute left-0 sm:left-2 z-40 w-7 h-7 sm:w-12 sm:h-12 rounded-full border border-[#b38b1a]/40 sm:border-2 bg-[#fdfbf7]/80 sm:bg-[#fdfbf7]/90 hover:bg-[#b38b1a] hover:text-white text-[#b38b1a] flex items-center justify-center transition-all duration-300 shadow-md cursor-pointer hover:scale-105 active:scale-95 opacity-70 sm:opacity-100"
               aria-label="Previous page"
             >
-              <span className="text-sm sm:text-base font-bold">◀</span>
+              <span className="text-xs sm:text-base font-bold">◀</span>
             </button>
           )}
 
           {/* 3-D book */}
           <div className="perspective-2000 w-full flex justify-center">
             <div
-              className={`relative h-[300px] w-full max-w-[900px] sm:h-[500px] preserve-3d ${cursor} ${tc}`}
+              className={`relative h-[210px] xs:h-[260px] sm:h-[500px] w-full max-w-[900px] preserve-3d ${cursor} ${tc}`}
               style={{ transform: `rotateX(20deg) translateX(${txVal}%) scale(${isEnlarged ? 1.14 : 1})` }}
               onMouseDown={(e)  => startDrag(e.clientX)}
               onMouseMove={(e)  => moveDrag(e.clientX)}
@@ -357,11 +357,28 @@ export default function PhotoGallery() {
                         <button 
                           onClick={(e) => {
                             e.stopPropagation();
-                            setPage(0); // Restart album!
+                            setPage(0);
                           }}
-                          className="px-4 py-1.5 sm:px-6 sm:py-2 bg-[#b38b1a] hover:bg-[#d4af37] text-white rounded-md text-[9px] sm:text-xs tracking-widest uppercase font-semibold transition-all duration-300 shadow-md hover:scale-105 active:scale-95 mb-4 border border-[#d4af37]/50 pointer-events-auto cursor-pointer"
+                          onTouchEnd={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            setPage(0);
+                          }}
+                          className="relative overflow-hidden group mb-4 px-5 py-2 sm:px-8 sm:py-3 rounded-full text-[10px] sm:text-xs tracking-[0.2em] uppercase font-bold text-white pointer-events-auto cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(212,175,55,0.4)] hover:shadow-[0_0_30px_rgba(212,175,55,0.7)]"
+                          style={{ background: 'linear-gradient(135deg, #8a6f1a 0%, #d4af37 50%, #8a6f1a 100%)', backgroundSize: '200% 100%' }}
                         >
-                          Restart Album ↺
+                          {/* Shimmer overlay */}
+                          <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                            style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%)', animation: 'btn-shimmer 1.2s ease-in-out infinite' }}
+                          />
+                          {/* Inner border */}
+                          <span className="absolute inset-[2px] rounded-full border border-white/20 pointer-events-none" />
+                          <span className="relative flex items-center gap-2">
+                            <svg className="w-3 h-3 sm:w-4 sm:h-4 transition-transform duration-500 group-hover:rotate-[360deg]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4v5h.582M20 20v-5h-.581M4.582 9a8 8 0 0115.356 2M19.418 15a8 8 0 01-15.356-2" />
+                            </svg>
+                            View Again
+                          </span>
                         </button>
                       </div>
                     ) : (
@@ -410,17 +427,6 @@ export default function PhotoGallery() {
                     </div>
                   </div>
 
-                  {/* Animated hand hint */}
-                  <div className="mb-4 flex flex-col items-center gap-1 pointer-events-none">
-                    <span
-                      className={`text-2xl sm:text-3xl select-none ${
-                        isEnlarged ? 'animate-swipe-left' : 'animate-hand-tap'
-                      }`}
-                      role="img" aria-label={isEnlarged ? 'swipe left' : 'tap'}
-                    >
-                      {isEnlarged ? '👈' : '👆'}
-                    </span>
-                  </div>
 
                   {/* Vertical Satin Ribbon */}
                   <div className="absolute right-[12%] top-0 h-full w-4 sm:w-6 bg-gradient-to-b from-[#b38b1a] via-[#e5c158] to-[#b38b1a] shadow-[0_0_8px_rgba(0,0,0,0.4)] pointer-events-none z-10 opacity-90">
@@ -435,11 +441,11 @@ export default function PhotoGallery() {
                       setIsEnlarged((prev) => !prev);
                     }}
                   >
-                    {/* Animated hand next to bow */}
-                    <div className={`mr-0.5 text-xl sm:text-2xl select-none transition-all duration-300 ${
+                    {/* Animated hand next to bow — points right toward ribbon */}
+                    <div className={`mr-1 text-xl sm:text-2xl select-none transition-all duration-300 ${
                       isEnlarged ? 'animate-swipe-left' : 'animate-hand-tap'
                     }`}>
-                      {isEnlarged ? '👈' : '👆'}
+                      {isEnlarged ? '👈' : '👉'}
                     </div>
                     
                     {/* 3D Bow Knot — scales up when enlarged */}
@@ -513,10 +519,10 @@ export default function PhotoGallery() {
           {page > 0 && page < MAX_PAGE && (
             <button
               onClick={(e) => { e.stopPropagation(); goNext(); }}
-              className="absolute right-0 sm:right-2 z-40 w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-[#b38b1a]/40 bg-[#fdfbf7]/90 hover:bg-[#b38b1a] hover:text-white text-[#b38b1a] flex items-center justify-center transition-all duration-300 shadow-md cursor-pointer hover:scale-105 active:scale-95"
+              className="absolute right-0 sm:right-2 z-40 w-7 h-7 sm:w-12 sm:h-12 rounded-full border border-[#b38b1a]/40 sm:border-2 bg-[#fdfbf7]/80 sm:bg-[#fdfbf7]/90 hover:bg-[#b38b1a] hover:text-white text-[#b38b1a] flex items-center justify-center transition-all duration-300 shadow-md cursor-pointer hover:scale-105 active:scale-95 opacity-70 sm:opacity-100"
               aria-label="Next page"
             >
-              <span className="text-sm sm:text-base font-bold">▶</span>
+              <span className="text-xs sm:text-base font-bold">▶</span>
             </button>
           )}
 
