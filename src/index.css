@@ -88,6 +88,15 @@ body {
   animation: float 5s ease-in-out infinite;
 }
 
+.animate-bounce-slow {
+  animation: bounce-slow 2s ease-in-out infinite;
+}
+
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-5px); }
+}
+
 .animate-fade-up {
   opacity: 0;
   animation: fade-up 0.9s ease-out forwards;
@@ -489,8 +498,6 @@ body {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: shimmer 6s linear infinite;
-  text-shadow: 0 0 20px rgba(179, 139, 26, 0.1);
-  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.05));
 }
 
 .perspective-2000 {
@@ -708,4 +715,42 @@ body {
 @keyframes btn-shimmer {
   0%   { transform: translateX(-100%); }
   100% { transform: translateX(200%); }
+}
+
+@keyframes music-note-float {
+  0% {
+    transform: translate(-50%, -50%) rotate(-12deg) scale(0.65);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--note-drift, 0px)), calc(-50% - 12px)) rotate(2deg) scale(1.05);
+  }
+  100% {
+    transform: translate(calc(-50% + var(--note-drift, 0px)), calc(-50% - 96px)) rotate(16deg) scale(0.85);
+    opacity: 0;
+  }
+}
+
+.animate-music-note-float {
+  animation: music-note-float ease-out forwards;
+}
+
+@keyframes music-note-float-down {
+  0% {
+    transform: translate(-50%, -50%) rotate(12deg) scale(0.65);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--note-drift, 0px)), calc(-50% + 12px)) rotate(-2deg) scale(1.05);
+  }
+  100% {
+    transform: translate(calc(-50% + var(--note-drift, 0px)), calc(-50% + 120px)) rotate(-16deg) scale(0.85);
+    opacity: 0;
+  }
+}
+
+.animate-music-note-float-down {
+  animation: music-note-float-down ease-out forwards;
 }

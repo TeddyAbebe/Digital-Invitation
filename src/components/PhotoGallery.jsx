@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import SectionHeader from "./SectionHeader";
+import Reveal from "./Reveal";
 import { Camera, GraduationCap } from "lucide-react";
 
 import img1 from "/images/kalkidan-scroll.jpg";
@@ -244,7 +245,8 @@ export default function PhotoGallery() {
         />
 
         {/* Interactive arrows + 3-D book container */}
-        <div className="relative mt-8 sm:mt-12 flex justify-center items-center w-full max-w-[1050px] mx-auto px-2 sm:px-16">
+        <Reveal variant="scale" delay={250} duration={850}>
+          <div className="relative mt-8 sm:mt-12 flex justify-center items-center w-full max-w-[1050px] mx-auto px-2 sm:px-16">
           
           {/* Floating Left Arrow */}
           {page > 0 && (
@@ -543,6 +545,7 @@ export default function PhotoGallery() {
             ))}
           </div>
         )}
+        </Reveal>
       </div>
     </section>
   );

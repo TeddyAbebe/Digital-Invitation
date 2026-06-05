@@ -39,8 +39,16 @@ export default function Hero() {
         </p>
 
         <h1
-          className="animate-fade-up gold-shimmer mb-4 font-[family-name:var(--font-display)] text-5xl leading-tight font-semibold tracking-tight sm:text-6xl md:text-7xl"
-          style={{ animationDelay: "0.55s" }}
+          className="animate-fade-up mb-4 font-[family-name:var(--font-display)] text-5xl leading-tight font-semibold tracking-tight sm:text-6xl md:text-7xl"
+          style={{
+            animationDelay: "0.55s",
+            background: "linear-gradient(105deg, #b38b1a 0%, #fde68a 30%, #d4af37 55%, #854d0e 75%, #d4af37 100%)",
+            backgroundSize: "200% auto",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+            animation: "fade-up 0.9s ease-out 0.55s forwards, shimmer 6s linear 1.5s infinite",
+          }}
         >
           {invitation.graduateName}
         </h1>
@@ -92,17 +100,6 @@ export default function Hero() {
       >
         <Countdown />
       </div>
-
-      <a
-        href="#details"
-        className="animate-fade-up mt-12 inline-flex flex-col items-center gap-2 text-[#b38b1a]/80 transition hover:text-[#d4af37]"
-        style={{ animationDelay: "1.2s" }}
-      >
-        <span className="font-[family-name:var(--font-sans)] text-xs tracking-[0.3em] uppercase">
-          Scroll to discover
-        </span>
-        <span className="scroll-chevron block h-6 w-6 border-r-2 border-b-2 border-[#b38b1a]/60" />
-      </a>
     </header>
   );
 }
