@@ -671,3 +671,36 @@ body {
     0 0 0 1px rgba(201, 162, 39, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
+
+/* ── Album cover ribbon decorations ── */
+@keyframes ribbon-sway {
+  0%, 100% { transform: rotate(-2deg) scaleX(1); }
+  50%       { transform: rotate(2deg)  scaleX(1.01); }
+}
+.ribbon-sway {
+  animation: ribbon-sway 3s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+@keyframes ribbon-bounce {
+  0%, 100% { transform: translateX(0);    opacity: 0.6; }
+  50%       { transform: translateX(-5px); opacity: 1;   }
+}
+.ribbon-bounce {
+  display: inline-block;
+  animation: ribbon-bounce 1.6s ease-in-out infinite;
+}
+
+/* ── Dragging-hand hints ── */
+@keyframes hand-tap {
+  0%, 100% { transform: translateY(0)   scale(1);    opacity: 0.85; }
+  40%       { transform: translateY(-6px) scale(1.1); opacity: 1;    }
+  60%       { transform: translateY(-6px) scale(1.1); opacity: 1;    }
+}
+.animate-hand-tap {
+  display: inline-block;
+  animation: hand-tap 1.6s ease-in-out infinite;
+}
+
+
+
