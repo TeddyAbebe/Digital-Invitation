@@ -6,7 +6,7 @@ Digital graduation invitation for **Kalkidan Temesgen** — built with Vite, Rea
 
 - Elegant gold & midnight theme with animations
 - Ceremony details and program schedule
-- Interactive map (Megenagna, Addis Ababa)
+- Interactive map (Hawassa, Ethiopia)
 - Wish form — sends via direct Telegram message to [@kalinata](https://t.me/kalinata)
 
 ## Run locally

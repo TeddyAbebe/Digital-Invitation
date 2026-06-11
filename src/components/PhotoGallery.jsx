@@ -120,14 +120,21 @@ function SpreadContent({ spread, side }) {
 ───────────────────────────────────────── */
 export default function PhotoGallery() {
   const [page, setPage]           = useState(0);
+  const [prevPage, setPrevPage]   = useState(0);
   const [dragStartX, setDragStartX] = useState(null);
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isEnlarged, setIsEnlarged] = useState(false);
   const sectionRef = useRef(null);
 
-  const goNext = () => setPage((p) => Math.min(p + 1, MAX_PAGE));
-  const goPrev = () => setPage((p) => Math.max(p - 1, 0));
+  const goNext = () => {
+    setPrevPage(page);
+    setPage((p) => Math.min(p + 1, MAX_PAGE));
+  };
+  const goPrev = () => {
+    setPrevPage(page);
+    setPage((p) => Math.max(p - 1, 0));
+  };
 
   const openAlbum = (e) => {
     e?.stopPropagation?.();
@@ -136,6 +143,14 @@ export default function PhotoGallery() {
   };
 
   const stopBookDrag = (e) => e.stopPropagation();
+
+  /* Sync prevPage with page after transition finishes */
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPrevPage(page);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [page]);
 
   /* Reset enlarged state once book opens */
   useEffect(() => {
@@ -147,7 +162,13 @@ export default function PhotoGallery() {
     const el = sectionRef.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => { if (!entry.isIntersecting) { setPage(0); setIsEnlarged(false); } },
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          setPage(0);
+          setPrevPage(0);
+          setIsEnlarged(false);
+        }
+      },
       { threshold: 0.05 }
     );
     obs.observe(el);
@@ -226,20 +247,38 @@ export default function PhotoGallery() {
     return angle;
   };
 
-  /**
-   * Z-index scheme (works even inside preserve-3d via CSS z-index hint):
-   *   Right stack (unflipped): lower k → higher z   (first-to-flip on top)
-   *   Left  stack (flipped):   higher k → higher z  (most-recently-flipped on top)
-   */
-  const getFlipZ = (k) =>
-    page >= k + 2 ? 10 + k : 10 + NUM_FLIPS - k;
+  const getFlipZ = (k) => {
+    // If this element is currently flipping (in the air), give it the highest z-index
+    if (page !== prevPage && k === Math.min(page, prevPage) - 1) {
+      return 100;
+    }
+    return page >= k + 2 ? 10 + k : 10 + NUM_FLIPS - k;
+  };
 
   /* ── Shared values ── */
   const tc      = isDragging ? "transition-none" : "transition-transform duration-1000 ease-in-out";
   const cursor  = isDragging ? "cursor-grabbing" : "cursor-grab";
   const fanOpacity    = (page === 0 || page === MAX_PAGE) ? 0 : 0.3;
   const coverClosed   = page === 0;
-  const currentSpread = (page >= 1 && page < MAX_PAGE) ? spreads[page - 1] : null;
+  // Determine which spreads to show on the static background pages to prevent flickering/glitching
+  let leftSpread = null;
+  let rightSpread = null;
+
+  if (page === prevPage) {
+    if (page >= 1 && page < MAX_PAGE) {
+      leftSpread = spreads[page - 1];
+      rightSpread = spreads[page - 1];
+    }
+  } else {
+    const transitioningFromPage = Math.min(page, prevPage);
+    if (transitioningFromPage >= 1 && transitioningFromPage < MAX_PAGE) {
+      leftSpread = spreads[transitioningFromPage - 1];
+    }
+    const transitioningToPage = transitioningFromPage + 1;
+    if (transitioningToPage >= 1 && transitioningToPage < MAX_PAGE) {
+      rightSpread = spreads[transitioningToPage - 1];
+    }
+  }
 
   return (
     <section
@@ -298,15 +337,15 @@ export default function PhotoGallery() {
                 style={{ zIndex: 150 }}
               />
 
-              {/* ── Static background pages (always show current spread) ── */}
-              {page >= 1 && page < MAX_PAGE && (
+              {/* ── Static background pages (shows correct pages during transitions to avoid flickering) ── */}
+              {(leftSpread || rightSpread) && (
                 <>
                   {/* Left background page */}
                   <div
                     className="vintage-paper absolute top-0 right-1/2 rounded-l-sm h-full w-[49.5%] backface-hidden"
                     style={{ transform: "rotateY(-15deg)", transformOrigin: "right center", zIndex: 5 }}
                   >
-                    <SpreadContent spread={currentSpread} side="left" />
+                    <SpreadContent spread={leftSpread} side="left" />
                     <div className="absolute top-0 right-0 h-full w-8 bg-gradient-to-l from-black/20 to-transparent pointer-events-none" />
                   </div>
                   {/* Right background page */}
@@ -314,7 +353,7 @@ export default function PhotoGallery() {
                     className="vintage-paper absolute top-0 left-1/2 rounded-r-sm h-full w-[49.5%] backface-hidden"
                     style={{ transform: "rotateY(15deg)", transformOrigin: "left center", zIndex: 5 }}
                   >
-                    <SpreadContent spread={currentSpread} side="right" />
+                    <SpreadContent spread={rightSpread} side="right" />
                     <div className="absolute top-0 left-0 h-full w-8 bg-gradient-to-r from-black/20 to-transparent pointer-events-none" />
                   </div>
                 </>
@@ -369,11 +408,13 @@ export default function PhotoGallery() {
                           onClick={(e) => {
                             e.stopPropagation();
                             setPage(0);
+                            setPrevPage(0);
                           }}
                           onTouchEnd={(e) => {
                             e.stopPropagation();
                             e.preventDefault();
                             setPage(0);
+                            setPrevPage(0);
                           }}
                           className="relative overflow-hidden group mb-4 px-5 py-2 sm:px-8 sm:py-3 rounded-full text-[10px] sm:text-xs tracking-[0.2em] uppercase font-bold text-white pointer-events-auto cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(212,175,55,0.4)] hover:shadow-[0_0_30px_rgba(212,175,55,0.7)]"
                           style={{ background: 'linear-gradient(135deg, #8a6f1a 0%, #d4af37 50%, #8a6f1a 100%)', backgroundSize: '200% 100%' }}
@@ -409,7 +450,10 @@ export default function PhotoGallery() {
               {/* ── Front Cover ── */}
               <div
                 className={`absolute top-0 left-1/2 h-full w-[49.5%] origin-left preserve-3d ${tc}`}
-                style={{ transform: `rotateY(${coverAngle}deg)`, zIndex: page === 0 ? 100 : 2 }}
+                style={{
+                  transform: `rotateY(${coverAngle}deg)`,
+                  zIndex: (page === 0 || (page !== prevPage && Math.min(page, prevPage) === 0)) ? 100 : 2
+                }}
               >
                 {/* Cover face */}
                 <div className="backface-hidden overflow-visible absolute inset-0 rounded-r-sm bg-gradient-to-br from-[#1e293b] to-[#0f172a] border-2 border-[#b38b1a] p-4 sm:p-8 flex flex-col items-center justify-between text-center shadow-[inset_0_0_30px_rgba(0,0,0,0.8),0_15px_35px_rgba(0,0,0,0.5)]">

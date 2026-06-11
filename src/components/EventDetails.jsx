@@ -9,6 +9,7 @@ import {
   Camera,
   Music2,
   Footprints,
+  Sparkles,
 } from "lucide-react";
 import { invitation, schedule } from "../config";
 import { useInView } from "../hooks/useInView";

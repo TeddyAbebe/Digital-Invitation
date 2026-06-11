@@ -82,7 +82,7 @@ export default function LocationMap() {
         <SectionHeader
           icon={MapPin}
           title="Find Us There"
-          subtitle="Megenagna Across — tap for directions"
+          subtitle="Hawassa — tap for directions"
         />
 
         <Reveal variant="scale" delay={150} duration={800}>

@@ -16,8 +16,8 @@ export const invitation = {
   eventYear: "2026",
   date: "Saturday, August 1, 2026",
   time: "5:00 PM, LT",
-  venue: "Megenagna Across",
-  address: "Megenagna, Addis Ababa, Ethiopia",
+  venue: "Hawassa",
+  address: "Hawassa, Ethiopia",
   dressCode: "White for all with pleasure",
   rsvpNote: "Guest arrival & welcome at 5:00 LT",
 };
@@ -29,10 +29,10 @@ export const schedule = [
   { time: "9:00 LT", event: "Celebration with Music & Joy" },
 ];
 
-/** Megenagna, Addis Ababa */
+/** Hawassa, Ethiopia */
 export const venueLocation = {
-  lat: 9.0122,
-  lng: 38.8156,
+  lat: 7.0621,
+  lng: 38.4764,
   zoom: 16,
 };
 
